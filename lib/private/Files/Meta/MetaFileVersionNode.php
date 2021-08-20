@@ -54,6 +54,12 @@ class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvide
 	/** @var array */
 	private $versionInfo;
 
+  /**
+   * @var string
+   */
+
+	private $username = "";
+
 	/**
 	 * MetaFileVersionNode constructor.
 	 *
@@ -76,8 +82,16 @@ class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvide
 		$this->storage = $storage;
 		$this->internalPath = $internalPath;
 		$this->root = $root;
+
+		if(isset($version['username'])) {
+		  $this->username = $version['username'];
+		}
 	}
 
+
+	public function getUsername() {
+	  return $this->username;
+  }
 	/**
 	 * @inheritdoc
 	 */
