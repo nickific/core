@@ -40,10 +40,11 @@ use OCP\Encryption\IManager;
 use OCP\Encryption\Keys\IStorage;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Storage;
+use OCP\Files\Storage\IVersionedStorage;
 use OCP\ILogger;
 use OCP\Files\Cache\ICacheEntry;
 
-class Encryption extends Wrapper {
+class Encryption extends Wrapper implements Storage\IVersionedStorage {
 	use LocalTempFileTrait;
 
 	/** @var string */
@@ -491,7 +492,8 @@ class Encryption extends Wrapper {
 					$unencryptedSize,
 					$headerSize,
 					$signed,
-					$sourceFileOfRename
+					$sourceFileOfRename,
+					null # TODO: maybe fill it?
 				);
 				unset($this->sourcePath[$path]);
 
@@ -1087,4 +1089,79 @@ class Encryption extends Wrapper {
 		$normalized = Filesystem::normalizePath($path);
 		return \substr($normalized, 0, \strlen('/files_versions/')) === '/files_versions/';
 	}
+
+	public function getVersions($internalPath) {
+		if ($this->storage instanceof IVersionedStorage) {
+			return $this->storage->getVersions($internalPath);
+		}
+		return null;
+	}
+
+	public function getVersion($internalPath, $versionId) {
+		if ($this->storage instanceof IVersionedStorage) {
+			return $this->storage->getVersion($internalPath, $versionId);
+		}
+		return null;
+	}
+
+	public function getContentOfVersion($internalPath, $versionId) {
+		if ($this->storage instanceof IVersionedStorage) {
+			$stream = $this->storage->getContentOfVersion($internalPath, $versionId);
+			$info = $this->storage->getVersion($internalPath, $versionId);
+			$header = $this->getHeader($stream);
+			$signed = (isset($header['signed']) && $header['signed'] === 'true') ? true : false;
+			$path = $internalPath;
+			# getFullPath returns wrong information here .....
+			$fullPath = $this->getFullPath($path);
+			$encryptionModuleId = $this->util->getEncryptionModuleId($header);
+			$encryptionModule = $this->encryptionManager->getEncryptionModule($encryptionModuleId);
+
+			$size = $this->storage->filesize($internalPath);
+			$unencryptedSize = $size;
+			$fileEncryptionVersion = null;
+			if ($info['size']) {
+				$unencryptedSize = $info['size'];
+			}
+			if ($info['encryptedVersion']) {
+				$fileEncryptionVersion = $info['encryptedVersion'];
+			}
+			$headerSize = $this->getHeaderSize($stream);
+
+			return \OC\Files\Stream\Encryption::wrap(
+				$stream,
+				$path,
+				$fullPath,
+				$header,
+				$this->uid,
+				$encryptionModule,
+				$this->storage,
+				$this,
+				$this->util,
+				$this->fileHelper,
+				'rb',
+				$size,
+				$unencryptedSize,
+				$headerSize,
+				$signed,
+				null,
+				$fileEncryptionVersion
+			);
+		}
+		return null;
+	}
+
+	public function restoreVersion($internalPath, $versionId) {
+		if ($this->storage instanceof IVersionedStorage) {
+			return $this->storage->restoreVersion($internalPath, $versionId);
+		}
+		return null;
+	}
+
+	public function saveVersion($internalPath) {
+		if ($this->storage instanceof IVersionedStorage) {
+			return $this->storage->saveVersion($internalPath);
+		}
+		return null;
+	}
+
 }
