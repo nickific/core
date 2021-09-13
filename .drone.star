@@ -197,6 +197,19 @@ config = {
             "federatedServerNeeded": True,
             "federatedServerVersions": ["git", "latest", "10.7.0"],
         },
+        "cliEncryption": {
+            "suites": [
+                "cliEncryption",
+            ],
+            "extraApps": {
+                "encryption": "composer install",
+            },
+            "extraCommandsBeforeTestRun": [
+                "mkdir data/owncloud-keys",
+                "chown -R www-data data/owncloud-keys",
+                "chmod -R 0770 data/owncloud-keys",
+            ],
+        },
         "webUI": {
             "suites": {
                 "webUIAddUsers": "",

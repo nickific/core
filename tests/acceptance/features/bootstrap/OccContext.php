@@ -616,6 +616,16 @@ class OccContext implements Context {
 	}
 
 	/**
+	 * @Given the administrator has selected master key encryption type using the occ command
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function theAdministratorHasSelectedMasterKeyEncryptionTypeUsingTheOccCommand():void {
+		$this->featureContext->runOcc(['encryption:select-encryption-type', "masterkey --yes"]);
+	}
+
+	/**
 	 * @When the administrator imports security certificate from file :filename in temporary storage on the system under test
 	 *
 	 * @param string $filename
@@ -709,6 +719,17 @@ class OccContext implements Context {
 			// if the above command fails make sure to turn off maintenance mode
 			\system("./occ maintenance:mode --off");
 		}
+	}
+
+	/**
+	 * @When the administrator runs encryption decrypt all using the occ command
+	 *
+	 * @return void
+	 */
+	public function theAdministratorRunsEncryptionDecryptAllUsingTheOccCommand() {
+		\system("echo 'admin' | sudo -S www-data ./occ encryption:decrypt-all -c yes", $status);
+		\var_dump($status);
+		\system("echo 'admin' | sudo -S www-data ./occ maintenance:mode --off");
 	}
 
 	/**
