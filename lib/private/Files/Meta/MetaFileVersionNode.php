@@ -27,6 +27,7 @@ use OC\Files\Node\File;
 use OCP\Files\ForbiddenException;
 use OCP\Files\IProvidesAdditionalHeaders;
 use OC\Preview;
+use OCP\Files\IProvidesVersionAuthor;
 use OCP\Files\IRootFolder;
 use OCP\Files\IPreviewNode;
 use OCP\Files\Storage\IVersionedStorage;
@@ -39,7 +40,7 @@ use OCP\IImage;
  *
  * @package OC\Files\Meta
  */
-class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvidesAdditionalHeaders {
+class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvidesAdditionalHeaders, IProvidesVersionAuthor {
 
 	/** @var string */
 	private $versionId;
