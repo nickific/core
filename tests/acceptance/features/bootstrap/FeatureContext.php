@@ -404,21 +404,21 @@ class FeatureContext extends BehatVariablesContext {
 	/**
 	 * @return string
 	 */
-	public function getLdapBaseDN(): string {
+	public function getLdapBaseDN():string {
 		return $this->ldapBaseDN;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLdapUsersOU(): string {
+	public function getLdapUsersOU():string {
 		return $this->ldapUsersOU;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLdapGroupsOU(): string {
+	public function getLdapGroupsOU():string {
 		return $this->ldapGroupsOU;
 	}
 
@@ -443,35 +443,35 @@ class FeatureContext extends BehatVariablesContext {
 	/**
 	 * @return string
 	 */
-	public function getLdapHost(): string {
+	public function getLdapHost():string {
 		return $this->ldapHost;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLdapHostWithoutScheme(): string {
+	public function getLdapHostWithoutScheme():string {
 		return $this->removeSchemeFromUrl($this->ldapHost);
 	}
 
 	/**
 	 * @return integer
 	 */
-	public function getLdapPort(): int {
+	public function getLdapPort():int {
 		return $this->ldapPort;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isTestingWithLdap(): bool {
+	public function isTestingWithLdap():bool {
 		return (\getenv("TEST_WITH_LDAP") === "true");
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function sendScenarioLineReferencesInXRequestId(): ?bool {
+	public function sendScenarioLineReferencesInXRequestId():?bool {
 		if ($this->sendStepLineRef === null) {
 			$this->sendStepLineRef = (\getenv("SEND_SCENARIO_LINE_REFERENCES") === "true");
 		}
@@ -481,7 +481,7 @@ class FeatureContext extends BehatVariablesContext {
 	/**
 	 * @return bool
 	 */
-	public function isTestingReplacingUsernames(): bool {
+	public function isTestingReplacingUsernames():bool {
 		return (\getenv('REPLACE_USERNAMES') === "true");
 	}
 
@@ -642,7 +642,7 @@ class FeatureContext extends BehatVariablesContext {
 	 */
 	public function getPathFromCoreToAppAcceptanceTests(
 		string $appTestCodeFullPath
-	): string {
+	):string {
 		// $appTestCodeFullPath is something like:
 		// '/somedir/anotherdir/core/apps/guests/tests/acceptance/features/bootstrap'
 		// and we want to know the 'apps/guests/tests/acceptance' part
@@ -2139,7 +2139,7 @@ class FeatureContext extends BehatVariablesContext {
 	 *
 	 * @return string|null
 	 */
-	public function getActualUsername($functionalUsername) {
+	public function getActualUsername(?string $functionalUsername): ?string {
 		if ($functionalUsername === null) {
 			return null;
 		}
@@ -2220,6 +2220,7 @@ class FeatureContext extends BehatVariablesContext {
 	 * @param string $content
 	 *
 	 * @return void
+	 * @throws Exception
 	 */
 	public function theAdministratorCreatesFileUsingTheTestingApi(string $path, string $content):void {
 		$this->theAdministratorCreatesFileWithContentInLocalStorageUsingTheTestingApi(
@@ -2236,6 +2237,7 @@ class FeatureContext extends BehatVariablesContext {
 	 * @param string $content
 	 *
 	 * @return void
+	 * @throws Exception
 	 */
 	public function theAdministratorHasCreatedFileUsingTheTestingApi(string $path, string $content):void {
 		$this->theAdministratorHasCreatedFileWithContentInLocalStorageUsingTheTestingApi(
