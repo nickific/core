@@ -741,7 +741,7 @@ trait Provisioning {
 	 * @param string $configValue
 	 *
 	 * @return void
-	 *@throws Exception
+	 * @throws Exception
 	 */
 	public function setLdapSetting(string $configId, string $configKey, string $configValue):void {
 		if ($configValue === "") {
