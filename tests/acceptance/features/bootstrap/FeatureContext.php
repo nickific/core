@@ -1078,9 +1078,9 @@ class FeatureContext extends BehatVariablesContext {
 	/**
 	 * @param string $user
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function setCurrentUser(string $user):string {
+	public function setCurrentUser(string $user):void {
 		$this->currentUser = $user;
 	}
 
