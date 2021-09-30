@@ -722,14 +722,28 @@ class OccContext implements Context {
 	}
 
 	/**
+	 * @Given the administrator has decrypted everything
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function theAdministratorHasDecryptedEverything():void {
+		$this->theAdministratorRunsEncryptionDecryptAllUsingTheOccCommand();
+		$this->theCommandShouldHaveBeenSuccessful();
+	}
+
+	/**
 	 * @When the administrator runs encryption decrypt all using the occ command
 	 *
 	 * @return void
 	 */
-	public function theAdministratorRunsEncryptionDecryptAllUsingTheOccCommand() {
-		\system("echo 'admin' | sudo -S www-data ./occ encryption:decrypt-all -c yes", $status);
-		\var_dump($status);
-		\system("echo 'admin' | sudo -S www-data ./occ maintenance:mode --off");
+	public function theAdministratorRunsEncryptionDecryptAllUsingTheOccCommand():void {
+		\system("echo 'root' | sudo -S www-data ./occ encryption:decrypt-all -c yes", $status);
+		$this->featureContext->setResultOfOccCommand(["code" => $status, "stdOut" => null, "stdErr" => null]);
+		if ($status !== 0) {
+			// if the above command fails make sure to turn off maintenance mode
+			\system("./occ maintenance:mode --off");
+		}
 	}
 
 	/**
