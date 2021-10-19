@@ -98,6 +98,46 @@ class FilesVersionsContext implements Context {
 	}
 
 	/**
+	 * @When user :user gets the number of versions of file :file with edited by prop
+	 *
+	 * @param string $user
+	 * @param string $file
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function userGetsFileVersionsWithEditedBy($user, $file) {
+		$user = $this->featureContext->getActualUsername($user);
+		$fileId = $this->featureContext->getFileIdForPath($user, $file);
+
+		$properties = [
+	  'oc:meta-version-edited-by',
+	  'oc:id',
+	  'getetag',
+	  'getlastmodified',
+	  'getcontentlength',
+	  'resourcetype',
+	  'getcontenttype'
+	];
+
+		$user = $this->featureContext->getActualUsername($user);
+		$password = $this->featureContext->getPasswordForUser($user);
+
+		$response = WebDavHelper::propfind(
+			$this->featureContext->getBaseUrl(),
+			$user,
+			$password,
+			$this->getVersionsPathForFileId($fileId),
+			$properties,
+			$this->featureContext->getStepLineRef(),
+			1,
+			"versions"
+		);
+
+		$this->featureContext->setResponse($response);
+	}
+
+	/**
 	 * @When user :user restores version index :versionIndex of file :path using the WebDAV API
 	 * @Given user :user has restored version index :versionIndex of file :path
 	 *
@@ -114,9 +154,9 @@ class FilesVersionsContext implements Context {
 		$xmlPart = $responseXml->xpath("//d:response/d:href");
 		//restoring the version only works with DAV path v2
 		$destinationUrl = $this->featureContext->getBaseUrl() . "/" .
-			WebDavHelper::getDavPath($user, 2) . \trim($path, "/");
+	  WebDavHelper::getDavPath($user, 2) . \trim($path, "/");
 		$fullUrl = $this->featureContext->getBaseUrlWithoutPath() .
-			$xmlPart[$versionIndex];
+	  $xmlPart[$versionIndex];
 		HttpRequestHelper::sendRequest(
 			$fullUrl,
 			$this->featureContext->getStepLineRef(),
@@ -197,7 +237,7 @@ class FilesVersionsContext implements Context {
 		$xmlPart = $responseXml->xpath("//d:prop/d:getcontentlength");
 		Assert::assertEquals(
 			$length,
-			(int) $xmlPart[$index],
+			(int)$xmlPart[$index],
 			"The content length of file {$path} with version {$index} for user {$user} was 
 			expected to be {$length} but the actual content length is {$xmlPart[$index]}"
 		);
@@ -250,13 +290,13 @@ class FilesVersionsContext implements Context {
 	public function listVersionFolder(
 		string $user,
 		string $fileId,
-		int $folderDepth,
-		array $properties = null
+		int    $folderDepth,
+		array  $properties = null
 	) {
 		if (!$properties) {
 			$properties = [
-				'getetag'
-			];
+		'getetag'
+	  ];
 		}
 		$user = $this->featureContext->getActualUsername($user);
 		$password = $this->featureContext->getPasswordForUser($user);

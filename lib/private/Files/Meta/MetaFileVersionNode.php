@@ -60,9 +60,9 @@ class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvide
    **/
 	private $editedBy = "";
 
-  /**
-   * @var string
-   **/
+	/**
+	 * @var string
+	 **/
 	private $createdBy = "";
 
 	/**
@@ -92,9 +92,9 @@ class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvide
 			$this->editedBy = $version['edited_by'];
 		}
 
-    if (isset($version['created_by'])) {
-      $this->createdBy = $version['created_by'];
-    }
+		if (isset($version['created_by'])) {
+			$this->createdBy = $version['created_by'];
+		}
 	}
 
 	/**
@@ -104,13 +104,12 @@ class MetaFileVersionNode extends AbstractFile implements IPreviewNode, IProvide
 		return $this->editedBy;
 	}
 
-  /**
-   * @return string
-   */
-  public function getCreatedBy()
-  {
-    return $this->createdBy;
-  }
+	/**
+	 * @return string
+	 */
+	public function getCreatedBy() {
+		return $this->createdBy;
+	}
 	
 	/**
 	 * @inheritdoc
